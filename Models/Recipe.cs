@@ -18,6 +18,7 @@ namespace RecipeeAPI.Models
         [StringLength(500)]
         [Required]
         public string Description { get; set; }
+        public int UserId { get; set; }
         public ICollection<Ingredient> Ingredients { get; set; }
         public ICollection<Method> Methods { get; set; }
         public ICollection<Review> Reviews { get; set; }

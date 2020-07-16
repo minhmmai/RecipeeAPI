@@ -12,8 +12,7 @@ namespace RecipeeAPI.Models
     public class Ingredient : BaseEntity
     {
         [Column(TypeName = ("decimal(5,2)"))]
-        [Required]
-        public decimal Quantity { get; set; }
+        public decimal? Quantity { get; set; }
         [StringLength(20)]
         public string Unit { get; set; }
         [StringLength(50)]

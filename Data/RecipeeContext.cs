@@ -18,5 +18,10 @@ namespace RecipeeAPI.Data
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Method> Methods { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Ingredient>()
+                .HasKey(i => new { i.Id, i.RecipeId });
+        }
     }
 }
