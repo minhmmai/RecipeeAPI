@@ -25,15 +25,7 @@ namespace RecipeeAPI.Data
                 new User { FirstName = "Arturo",   LastName = "Anand",
                     Email = "wdare2@home.pl" },
                 new User { FirstName = "Gytis",    LastName = "Barzdukas",
-                    Email = "wbarcroft3@etsy.com" },
-                new User { FirstName = "Yan",      LastName = "Li",
-                    Email = "cguice4@arstechnica.com" },
-                new User { FirstName = "Peggy",    LastName = "Justice",
-                    Email = "wbaskett5@wordpress.com" },
-                new User { FirstName = "Laura",    LastName = "Norman",
-                    Email = "zbenton6@slashdot.org" },
-                new User { FirstName = "Nino",     LastName = "Olivetto",
-                    Email = "jelgee7@netvibes.com" }
+                    Email = "wbarcroft3@etsy.com" }
             };
 
             context.Users.AddRange(users);
@@ -41,9 +33,9 @@ namespace RecipeeAPI.Data
 
             var recipes = new Recipe[]
             {
-                new Recipe {Name = "Quick & easy omelette", Description = "Mastering the art of cooking an omelette means you'll never be stuck for an easy dinner again. This step-by-step, three-egg omelette recipe can be easily adapted with the filling of your choice.", UserId = 1 },
-                new Recipe {Name = "2-ingredient vegan condensed milk", Description = "This simple homemade condensed milk recipe needs only 2 ingredients. Use it in all your favourite slice and fudge recipes.", UserId = 2 },
-                new Recipe {Name = "Salted caramel cookie cups", Description = "Wow your guests with our easiest-ever dessert cups.", UserId = 3 },
+                new Recipe {Name = "Quick & easy omelette", Description = "Mastering the art of cooking an omelette means you'll never be stuck for an easy dinner again. This step-by-step, three-egg omelette recipe can be easily adapted with the filling of your choice.", Serves = 1, UserId = 1 },
+                new Recipe {Name = "2-ingredient vegan condensed milk", Description = "This simple homemade condensed milk recipe needs only 2 ingredients. Use it in all your favourite slice and fudge recipes.", Serves = 1, UserId = 2 },
+                new Recipe {Name = "Salted caramel cookie cups", Description = "Wow your guests with our easiest-ever dessert cups.", Serves = 24, UserId = 3 },
             };
 
             context.Recipes.AddRange(recipes);
@@ -83,7 +75,7 @@ namespace RecipeeAPI.Data
                 new Review { Rating = 3, Feedback = "This recipe is ok, can be better", RecipeId = 1},
                 new Review { Rating = 5, Feedback = "Truly quick and easy, sometimes I need just this", RecipeId = 1},
                 new Review { Rating = 5, Feedback = "Nice recipe", RecipeId = 1},
-                new Review { Rating = 2, Feedback = "Couldn't make the same cakes as shown in the pics :(", RecipeId = 2},
+                new Review { Rating = 2, Feedback = "Couldn't get the same looks as the cakes shown in the pics :(", RecipeId = 2},
                 new Review { Rating = 4, Feedback = "", RecipeId = 2},
                 new Review { Rating = 4, Feedback = "", RecipeId = 3},
                 new Review { Rating = 5, Feedback = "Super Delicous and easy to make", RecipeId = 3}
