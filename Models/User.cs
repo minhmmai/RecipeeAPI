@@ -15,10 +15,20 @@ namespace RecipeeAPI.Models
         [StringLength(50)]
         [Required]
         public string LastName { get; set; }
+        [NotMapped]
+        public string FullName
+        {
+            get
+            {
+                return FirstName + " " + LastName;
+            }
+        }
         [DataType(DataType.EmailAddress)]
         [StringLength(100, MinimumLength = 10)]
         [Required]
         public string Email { get; set; }
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
         public ICollection<Recipe> Recipes { get; set; }
     }
 }
