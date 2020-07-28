@@ -15,7 +15,7 @@ using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using RecipeeAPI.Services.Auth;
+using RecipeeAPI.Services.AuthService;
 
 namespace RecipeeAPI
 {
@@ -47,7 +47,7 @@ namespace RecipeeAPI
                         ValidateAudience = false
                     };
                 });
-            services.AddScoped<IAuth, Auth>();
+            services.AddScoped<IAuthService, AuthService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

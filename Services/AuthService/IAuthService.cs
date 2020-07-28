@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RecipeeAPI.Services.Auth
+namespace RecipeeAPI.Services.AuthService
 {
-    public interface IAuth
+    public interface IAuthService
     {
         Task<ServiceResponse<int>> Register(User user, string password);
         Task<ServiceResponse<string>> Login(string email, string password);
