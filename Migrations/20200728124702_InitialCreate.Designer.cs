@@ -10,7 +10,7 @@ using RecipeeAPI.Data;
 namespace RecipeeAPI.Migrations
 {
     [DbContext(typeof(RecipeeContext))]
-    [Migration("20200728010150_InitialCreate")]
+    [Migration("20200728124702_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -171,10 +171,11 @@ namespace RecipeeAPI.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                    b.Property<byte[]>("PasswordHash")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("TimeStamp")
                         .IsConcurrencyToken()

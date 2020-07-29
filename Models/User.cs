@@ -29,6 +29,6 @@ namespace RecipeeAPI.Models
         public string Email { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-        public ICollection<Recipe> Recipes { get; set; }
+        public List<Recipe> Recipes { get; set; }
     }
 }
