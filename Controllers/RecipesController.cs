@@ -24,6 +24,7 @@ namespace RecipeeAPI.Controllers
             return Ok(await _rescipeService.GetAllRecipes());
         }        
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("~/recipes/{id}")]
         public async Task<IActionResult> GetRecipeById(int id)
