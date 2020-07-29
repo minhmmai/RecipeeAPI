@@ -12,14 +12,14 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecipeeAPI.Services.Auth
+namespace RecipeeAPI.Services.AuthService
 {
-    public class Auth : IAuth
+    public class AuthService : IAuthService
     {
         private IConfiguration _configuration;
         private RecipeeContext _context;
 
-        public Auth(RecipeeContext context, IConfiguration configuration)
+        public AuthService(RecipeeContext context, IConfiguration configuration)
         {
             _configuration = configuration;
             _context = context;

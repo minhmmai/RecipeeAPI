@@ -7,16 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 using RecipeeAPI.DTOs.User;
 using RecipeeAPI.Models;
 using RecipeeAPI.Services;
-using RecipeeAPI.Services.Auth;
+using RecipeeAPI.Services.AuthService;
 
 namespace RecipeeAPI.Controllers
 {
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private IAuth _auth;
+        private IAuthService _auth;
 
-        public AuthController(IAuth auth)
+        public AuthController(IAuthService auth)
         {
             _auth = auth;
         }
