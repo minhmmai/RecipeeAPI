@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using RecipeeAPI.Data;
+using RecipeeAPI.DTOs.Ingredient;
 using RecipeeAPI.DTOs.Recipe;
 using RecipeeAPI.Models;
 
@@ -52,11 +53,12 @@ namespace RecipeeAPI.Services.RecipeService
         public async Task<ServiceResponse<GetRecipeDTO>> GetRecipeById(int id)
         {
             ServiceResponse<GetRecipeDTO> response = new ServiceResponse<GetRecipeDTO>();
-            response.Data = _mapper.Map<GetRecipeDTO>(await _context.Recipes
+            Recipe recipe = await _context.Recipes
                 .Include(r => r.Ingredients)
                 .Include(r => r.Methods)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(r => r.Id == id)); ;
+                .FirstOrDefaultAsync(r => r.Id == id);
+            response.Data = _mapper.Map<GetRecipeDTO>(recipe);
             return response;
         }
 
