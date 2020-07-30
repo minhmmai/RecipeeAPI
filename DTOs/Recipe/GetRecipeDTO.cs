@@ -13,6 +13,6 @@ namespace RecipeeAPI.DTOs.Recipe
         public int Serves { get; set; }
         public List<GetIngredientDTO> Ingredients { get; set; }
         public List<GetMethodDTO> Methods { get; set; }
-        public List<Review> Reviews { get; set; }
+        public int UserId { get; set; }
     }
 }

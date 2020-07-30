@@ -7,7 +7,8 @@ namespace RecipeeAPI.DTOs.Method
 {
     public class GetMethodDTO
     {
-        public int Index { get; set; }
+        public int Id { get; set; }
+        public short Index { get; set; }
         public string Detail { get; set; }
     }
 }

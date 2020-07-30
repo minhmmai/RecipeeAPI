@@ -16,6 +16,8 @@ namespace RecipeeAPI
             CreateMap<AddRecipeDTO, Recipe>();
             CreateMap<Ingredient, GetIngredientDTO>();
             CreateMap<Method, GetMethodDTO>();
+            CreateMap<GetIngredientDTO, Ingredient>();
+            CreateMap<GetMethodDTO, Method>();
         }
     }
 }

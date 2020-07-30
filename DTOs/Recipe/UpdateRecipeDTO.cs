@@ -1,10 +1,13 @@
-using System.Collections.Generic;
+﻿using RecipeeAPI.DTOs.Ingredient;
 using RecipeeAPI.DTOs.Method;
-using RecipeeAPI.DTOs.Ingredient;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RecipeeAPI.DTOs.Recipe
 {
-    public class AddRecipeDTO
+    public class UpdateRecipeDTO
     {
         public string Name { get; set; }
         public string Description { get; set; }
