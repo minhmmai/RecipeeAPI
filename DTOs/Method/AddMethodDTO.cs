@@ -1,3 +1,4 @@
+
 namespace RecipeeAPI.DTOs.Method
 {
     public class AddMethodDTO

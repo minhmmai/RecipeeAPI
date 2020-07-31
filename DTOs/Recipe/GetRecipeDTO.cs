@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using RecipeeAPI.DTOs.Ingredient;
 using RecipeeAPI.DTOs.Method;
-using RecipeeAPI.Models;
 
 namespace RecipeeAPI.DTOs.Recipe
 {
