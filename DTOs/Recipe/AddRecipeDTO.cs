@@ -9,7 +9,7 @@ namespace RecipeeAPI.DTOs.Recipe
         public string Name { get; set; }
         public string Description { get; set; }
         public int Serves { get; set; }
-        public List<GetIngredientDTO> Ingredients { get; set; }
-        public List<GetMethodDTO> Methods { get; set; }
+        public List<AddIngredientDTO> Ingredients { get; set; }
+        public List<AddMethodDTO> Methods { get; set; }
     }
 }
