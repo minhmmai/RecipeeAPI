@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeeAPI.Data;
 using RecipeeAPI.DTOs.User;
+using RecipeeAPI.Services;
 using RecipeeAPI.Services.UserService;
 
 namespace RecipeeAPI.Controllers
@@ -26,12 +28,19 @@ namespace RecipeeAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
-            if (await _context.Users.AnyAsync(u => u.Id == id))
+            ServiceResponse<GetUserDTO> response = new ServiceResponse<GetUserDTO>();
+            try
             {
-                return Ok(await _userService.GetUserById(id));
+                response = await _userService.GetUserById(id);
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+                return BadRequest(response);
             }
 
-            return BadRequest();
+            return Ok(response);
         }
 
         [HttpPost("me")]

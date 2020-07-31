@@ -38,9 +38,14 @@ namespace RecipeeAPI.Services.UserService
             try
             {
                 User user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+                if (user == null)
+                {
+                    response.Success = false;
+                    response.Message = "User not found";
+                }
                 response.Data = _mapper.Map<GetUserDTO>(user);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 response.Success = false;
                 response.Message = ex.Message;
