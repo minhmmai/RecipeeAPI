@@ -19,6 +19,7 @@ using RecipeeAPI.Services.AuthService;
 using AutoMapper;
 using RecipeeAPI.Services.RecipeService;
 using Microsoft.AspNetCore.Http;
+using RecipeeAPI.Services.UserService;
 
 namespace RecipeeAPI
 {
@@ -53,6 +54,7 @@ namespace RecipeeAPI
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRecipeService, RecipeService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
