@@ -2,10 +2,12 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RecipeeAPI.Data;
+using RecipeeAPI.DTOs.User;
 using RecipeeAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,27 +44,42 @@ namespace RecipeeAPI.Services.AuthService
             return response;
         }
 
-        public async Task<ServiceResponse<int>> Register(User user, string password)
+        public async Task<ServiceResponse<int>> Register(UserRegisterDTO userRegisterDTO)
         {
             ServiceResponse<int> response = new ServiceResponse<int>();
-            if (await UserExist(user.Email))
+
+            if (await UserExist(userRegisterDTO.Email))
             {
                 response.Success = false;
                 response.Message = "Email already used";
                 return response;
             }
 
-            CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
+            foreach (PropertyInfo prop in userRegisterDTO.GetType().GetProperties())
+            {
+                if (string.IsNullOrEmpty(prop.GetValue(userRegisterDTO).ToString()))
+                {
+                    response.Success = false;
+                    response.Message = "Missing register detail";
+                    return response;
+                }
+                continue;
+            }
 
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
+            CreatePasswordHash(userRegisterDTO.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            User newUser = new User
+            {
+                FirstName = userRegisterDTO.FirstName,
+                LastName = userRegisterDTO.LastName,
+                Email = userRegisterDTO.Email,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt
+            };
 
-            await _context.Users.AddAsync(user);
+            await _context.Users.AddAsync(newUser);
             await _context.SaveChangesAsync();
 
-
-            response.Data = user.Id;
-
+            response.Data = newUser.Id;
             return response;
         }
 
