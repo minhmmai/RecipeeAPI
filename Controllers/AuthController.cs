@@ -21,8 +21,7 @@ namespace RecipeeAPI.Controllers
             _auth = auth;
         }
 
-        [Route("~/register")]
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegisterDTO request)
         {
             ServiceResponse<int> response = await _auth.Register(
@@ -40,8 +39,7 @@ namespace RecipeeAPI.Controllers
             return Ok(response);
         }
 
-        [Route("~/login")]
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<IActionResult> Login(UserLoginDTO request)
         {
             ServiceResponse<string> response = await _auth.Login(request.Email, request.Password);

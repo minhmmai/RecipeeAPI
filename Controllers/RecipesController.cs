@@ -9,6 +9,7 @@ namespace RecipeeAPI.Controllers
 {
     [ApiController]
     [Authorize]
+    [Route("[controller]")]
     public class RecipesController : ControllerBase
     {
         private IRecipeService _rescipeService;
@@ -19,29 +20,25 @@ namespace RecipeeAPI.Controllers
         }
 
         [HttpGet]
-        [Route("~/recipes")]
         public async Task<IActionResult> GetAllRecipes()
         {
             return Ok(await _rescipeService.GetAllRecipes());
         }        
 
         [AllowAnonymous]
-        [HttpGet]
-        [Route("~/recipes/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetRecipeById(int id)
         {
             return Ok(await _rescipeService.GetRecipeById(id));
         }
 
         [HttpPost]
-        [Route("~/recipes")]
         public async Task<IActionResult> AddRecipe(AddRecipeDTO newRecipe)
         {
             return Ok(await _rescipeService.AddRecipe(newRecipe));
         }
 
-        [HttpPut]
-        [Route("~/recipes/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRecipe(int id,UpdateRecipeDTO updatedRecipe)
         {
             ServiceResponse<GetRecipeDTO> response = new ServiceResponse<GetRecipeDTO>();
