@@ -37,7 +37,9 @@ namespace RecipeeAPI.Services.UserService
             ServiceResponse<GetUserDTO> response = new ServiceResponse<GetUserDTO>();
             try
             {
-                User user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+                User user = await _context.Users
+                    .Include(u => u.Recipes)
+                    .FirstOrDefaultAsync(u => u.Id == id);
                 if (user == null)
                 {
                     response.Success = false;
