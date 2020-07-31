@@ -39,7 +39,7 @@ namespace RecipeeAPI.Controllers
             return BadRequest();
         }
 
-        [HttpPost("~/me")]
+        [HttpPost("me")]
         public async Task<IActionResult> UpdateDetails(UpdateUserDTO updatedDetails)
         {
             if (updatedDetails == null)
@@ -50,7 +50,7 @@ namespace RecipeeAPI.Controllers
             return Ok(await _userService.UpdateUserDetails(updatedDetails));
         }
 
-        [HttpGet("~/me")]
+        [HttpGet("me")]
         public async Task<IActionResult> GetUserDetails()
         {
             return Ok(await _userService.GetDetails());
