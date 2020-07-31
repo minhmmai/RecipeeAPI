@@ -31,7 +31,7 @@ namespace RecipeeAPI.Services.AuthService
             User user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email.ToLower().Equals(email.ToLower()));
 
-            if (user == null && !VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            if (user == null || !VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
                 response.Success = false;
                 response.Message = "Incorrect login details";
