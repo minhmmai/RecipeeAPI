@@ -12,7 +12,7 @@ namespace RecipeeAPI.Controllers
     [Route("[controller]")]
     public class RecipesController : ControllerBase
     {
-        private IRecipeService _rescipeService;
+        private readonly IRecipeService _rescipeService;
 
         public RecipesController(IRecipeService recipeService)
         {
@@ -20,7 +20,7 @@ namespace RecipeeAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllRecipes()
+        public async Task<IActionResult> GetTest()
         {
             return Ok(await _rescipeService.GetAllRecipes());
         }        

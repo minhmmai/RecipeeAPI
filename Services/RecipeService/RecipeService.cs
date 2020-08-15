@@ -17,9 +17,9 @@ namespace RecipeeAPI.Services.RecipeService
 {
     public class RecipeService : IRecipeService
     {
-        private IHttpContextAccessor _httpContextAccessor;
-        private RecipeeContext _context;
-        private IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly RecipeeContext _context;
+        private readonly IMapper _mapper;
 
         public RecipeService(RecipeeContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
