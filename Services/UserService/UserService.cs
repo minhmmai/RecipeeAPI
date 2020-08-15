@@ -15,9 +15,9 @@ namespace RecipeeAPI.Services.UserService
 {
     public class UserService : IUserService
     {
-        private IMapper _mapper;
-        private RecipeeContext _context;
-        private IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
+        private readonly RecipeeContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserService(RecipeeContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
