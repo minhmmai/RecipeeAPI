@@ -19,7 +19,8 @@ namespace RecipeeAPI.Models
         [Required]
         public string Description { get; set; }
         public int Serves { get; set; }
-        public int UserId { get; set; }
+        [Required]
+        public string UserId { get; set; }
         public List<Ingredient> Ingredients { get; set; }
         public List<Method> Methods { get; set; }
         public List<Review> Reviews { get; set; }
