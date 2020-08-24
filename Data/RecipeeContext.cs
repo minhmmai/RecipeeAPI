@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RecipeeAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,9 @@ namespace RecipeeAPI.Data
         }
 
         public DbSet<Recipe> Recipes { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Method> Methods { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

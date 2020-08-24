@@ -12,41 +12,8 @@ namespace RecipeeAPI.Controllers
     [Route("[controller]")]
     public class RecipesController : ControllerBase
     {
-        private readonly IRecipeService _rescipeService;
-
-        public RecipesController(IRecipeService recipeService)
+        public RecipesController()
         {
-            _rescipeService = recipeService;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetTest()
-        {
-            return Ok(await _rescipeService.GetAllRecipes());
-        }        
-
-        [AllowAnonymous]
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetRecipeById(int id)
-        {
-            return Ok(await _rescipeService.GetRecipeById(id));
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddRecipe(AddRecipeDTO newRecipe)
-        {
-            return Ok(await _rescipeService.AddRecipe(newRecipe));
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateRecipe(int id,UpdateRecipeDTO updatedRecipe)
-        {
-            ServiceResponse<GetRecipeDTO> response = new ServiceResponse<GetRecipeDTO>();
-            if(updatedRecipe == null)
-            {
-                return NotFound(response);
-            }
-            return Ok(await _rescipeService.UpdateRecipe(id, updatedRecipe));
         }
     }
 }
