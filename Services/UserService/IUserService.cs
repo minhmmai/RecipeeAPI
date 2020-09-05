@@ -8,7 +8,7 @@ namespace RecipeeAPI.Services.UserService
 {
     public interface IUserService
     {
-        Task<ServiceResponse<GetUserDTO>> GetUserById(int id);
+        Task<ServiceResponse<GetUserDTO>> GetUserById(string id);
         Task<ServiceResponse<GetUserDTO>> UpdateUserDetails(UpdateUserDTO updatedDetails);
         Task<ServiceResponse<GetUserDTO>> GetDetails();
     }

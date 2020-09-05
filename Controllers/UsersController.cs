@@ -29,7 +29,7 @@ namespace RecipeeAPI.Controllers
 
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById(int id)
+        public async Task<IActionResult> GetUserById(string id)
         {
             if (await _context.Users.AnyAsync(u => u.Id == id))
             {

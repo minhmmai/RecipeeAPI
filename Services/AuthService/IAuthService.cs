@@ -1,4 +1,5 @@
-﻿using RecipeeAPI.Models;
+﻿using RecipeeAPI.DTOs.User;
+using RecipeeAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,8 @@ namespace RecipeeAPI.Services.AuthService
 {
     public interface IAuthService
     {
-        Task<ServiceResponse<int>> Register(User user, string password);
-        Task<ServiceResponse<string>> Login(string email, string password);
+        Task<ServiceResponse<string>> Register(RegisterUserDTO registerUserDTO);
+        Task<ServiceResponse<string>> Login(LoginUserDTO loginUserDTO);
         Task<bool> UserExist(string email);
     }
 }

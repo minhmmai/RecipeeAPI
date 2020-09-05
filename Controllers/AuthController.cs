@@ -22,15 +22,9 @@ namespace RecipeeAPI.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(UserRegisterDTO request)
+        public async Task<IActionResult> Register(RegisterUserDTO request)
         {
-            ServiceResponse<int> response = await _auth.Register(
-                new User
-                {
-                    FirstName = request.FirstName,
-                    LastName = request.LastName,
-                    Email = request.Email,
-                }, request.Password);
+            ServiceResponse<string> response = await _auth.Register(request);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -40,9 +34,9 @@ namespace RecipeeAPI.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(UserLoginDTO request)
+        public async Task<IActionResult> Login(LoginUserDTO request)
         {
-            ServiceResponse<string> response = await _auth.Login(request.Email, request.Password);
+            ServiceResponse<string> response = await _auth.Login(request);
             if(!response.Success)
             {
                 return BadRequest(response);

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using RecipeeAPI.Common;
 using RecipeeAPI.Data;
 using RecipeeAPI.DTOs.User;
 using RecipeeAPI.Models;
@@ -28,19 +27,19 @@ namespace RecipeeAPI.Services.UserService
         public async Task<ServiceResponse<GetUserDTO>> GetDetails()
         {
             ServiceResponse<GetUserDTO> response = new ServiceResponse<GetUserDTO>();
-            User user = await _context.Users
+            ApplicationUser user = await _context.Users
                 .Include(u => u.Recipes)
-                .FirstOrDefaultAsync(u => u.Id == UserHelper.GetUserId(_httpContextAccessor));
+                .FirstOrDefaultAsync(u => u.Id == GetUserId());
             response.Data = _mapper.Map<GetUserDTO>(user);
             return response;
         }
 
-        public async Task<ServiceResponse<GetUserDTO>> GetUserById(int id)
+        public async Task<ServiceResponse<GetUserDTO>> GetUserById(string id)
         {
             ServiceResponse<GetUserDTO> response = new ServiceResponse<GetUserDTO>();
             try
             {
-                User user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+                ApplicationUser user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
                 response.Data = _mapper.Map<GetUserDTO>(user);
             }
             catch(Exception ex)
@@ -57,7 +56,7 @@ namespace RecipeeAPI.Services.UserService
             ServiceResponse<GetUserDTO> response = new ServiceResponse<GetUserDTO>();
             try
             {
-                User user = await _context.Users.FirstOrDefaultAsync(u => u.Id == UserHelper.GetUserId(_httpContextAccessor));
+                ApplicationUser user = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId());
                 user.FirstName = updatedDetails.FirstName;
                 user.LastName = updatedDetails.LastName;
                 user.Email = updatedDetails.Email;
@@ -70,6 +69,11 @@ namespace RecipeeAPI.Services.UserService
                 response.Message = ex.Message;
             }
             return response;
+        }
+
+        private string GetUserId()
+        {
+            return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
     }

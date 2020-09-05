@@ -1,4 +1,5 @@
-﻿using RecipeeAPI.Models.Base;
+﻿using Microsoft.AspNetCore.Identity;
+using RecipeeAPI.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace RecipeeAPI.Models
 {
     [Table("User")]
-    public class User : BaseEntity
+    public class ApplicationUser : IdentityUser
     {
         [StringLength(50)]
         [Required]
@@ -23,12 +24,7 @@ namespace RecipeeAPI.Models
                 return FirstName + " " + LastName;
             }
         }
-        [DataType(DataType.EmailAddress)]
-        [StringLength(100, MinimumLength = 10)]
-        [Required]
-        public string Email { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
+        public string PictureUrl { get; set; }
         public List<Recipe> Recipes { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RecipeeAPI.DTOs.User
 {
-    public class UserRegisterDTO
+    public class RegisterUserDTO
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

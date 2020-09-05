@@ -10,6 +10,9 @@ using AutoMapper;
 using RecipeeAPI.Services.RecipeService;
 using Microsoft.AspNetCore.Http;
 using RecipeeAPI.Services.UserService;
+using RecipeeAPI.Models;
+using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace RecipeeAPI
 {
@@ -27,12 +30,35 @@ namespace RecipeeAPI
         {
             services.AddDbContext<RecipeeContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("RecipeeContext")));
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<RecipeeContext>();
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings.
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 0;
+
+                // Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+
+                // User settings.
+                options.User.AllowedUserNameCharacters =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = false;
+            });
             services.AddControllers().AddNewtonsoftJson(
                 options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 

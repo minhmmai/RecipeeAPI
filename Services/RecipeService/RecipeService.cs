@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using RecipeeAPI.Common;
 using RecipeeAPI.Data;
 using RecipeeAPI.DTOs.Ingredient;
 using RecipeeAPI.DTOs.Recipe;
@@ -31,7 +30,7 @@ namespace RecipeeAPI.Services.RecipeService
         {
             ServiceResponse<GetRecipeDTO> response = new ServiceResponse<GetRecipeDTO>();
             Recipe recipe = _mapper.Map<Recipe>(newRecipe);
-            recipe.Creator = await _context.Users.FirstOrDefaultAsync(u => u.Id == UserHelper.GetUserId(_httpContextAccessor));
+            recipe.Creator = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId());
             await _context.Recipes.AddAsync(recipe);
             await _context.SaveChangesAsync();
             response.Data = _mapper.Map<GetRecipeDTO>(recipe);
@@ -42,7 +41,7 @@ namespace RecipeeAPI.Services.RecipeService
         {
             ServiceResponse<List<GetRecipeDTO>> response = new ServiceResponse<List<GetRecipeDTO>>();
             List<Recipe> dbRecipes = await _context.Recipes
-                .Where(r => r.UserId == UserHelper.GetUserId(_httpContextAccessor))
+                .Where(r => r.UserId == GetUserId())
                 .Include(r => r.Ingredients)
                 .Include(r => r.Methods)
                 .AsNoTracking()
@@ -72,7 +71,7 @@ namespace RecipeeAPI.Services.RecipeService
                     .Include(r => r.Ingredients)
                     .Include(r => r.Methods)
                     .FirstOrDefaultAsync(r => r.Id == id);
-                if (recipe.UserId == UserHelper.GetUserId(_httpContextAccessor))
+                if (recipe.UserId == GetUserId())
                 {
                     recipe.Name = updatedRecipe.Name;
                     recipe.Description = updatedRecipe.Description;
@@ -164,6 +163,11 @@ namespace RecipeeAPI.Services.RecipeService
             }
 
             return response;
+        }
+
+        private string GetUserId()
+        {
+            return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
     }
 }
