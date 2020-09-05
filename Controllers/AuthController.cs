@@ -22,9 +22,10 @@ namespace RecipeeAPI.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterUserDTO request)
+        public async Task<IActionResult> Register([FromBody]RegisterUserDTO request)
         {
             ServiceResponse<string> response = await _auth.Register(request);
+
             if (!response.Success)
             {
                 return BadRequest(response);

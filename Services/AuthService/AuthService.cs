@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RecipeeAPI.Data;
@@ -17,13 +19,15 @@ namespace RecipeeAPI.Services.AuthService
 {
     public class AuthService : IAuthService
     {
-        private IConfiguration _configuration;
         private RecipeeContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AuthService(RecipeeContext context, IConfiguration configuration)
+        public AuthService(RecipeeContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            _configuration = configuration;
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public Task<ServiceResponse<string>> Login(LoginUserDTO loginUserDTO)
@@ -37,7 +41,29 @@ namespace RecipeeAPI.Services.AuthService
 
             try
             {
+                ApplicationUser newUser = new ApplicationUser
+                {
+                    UserName = registerUserDTO.Email,
+                    FirstName = registerUserDTO.FirstName,
+                    LastName = registerUserDTO.LastName,
+                    Email = registerUserDTO.Email
+                };
 
+                var result = await _userManager.CreateAsync(newUser, registerUserDTO.Password);
+
+                if (!result.Succeeded)
+                {
+                    response.Success = false;
+                    response.Message = "Failed to register user";
+                    return response;
+                }
+
+                ApplicationUser createdUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == registerUserDTO.Email);
+
+                await _userManager.AddToRoleAsync(createdUser, "member");
+
+                response.Data = createdUser.Id;
+                response.Message = "Successfully registered user";
             }
             catch (Exception ex)
             {
