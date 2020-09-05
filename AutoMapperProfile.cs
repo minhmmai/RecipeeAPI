@@ -3,6 +3,7 @@ using AutoMapper;
 using RecipeeAPI.DTOs.Ingredient;
 using RecipeeAPI.DTOs.Method;
 using RecipeeAPI.DTOs.Recipe;
+using RecipeeAPI.DTOs.User;
 using RecipeeAPI.Models;
 
 namespace RecipeeAPI
@@ -19,6 +20,7 @@ namespace RecipeeAPI
             CreateMap<AddMethodDTO, Method>();
             CreateMap<GetIngredientDTO, Ingredient>();
             CreateMap<GetMethodDTO, Method>();
+            CreateMap<ApplicationUser, GetUserDTO>();
         }
     }
 }

@@ -29,22 +29,11 @@ namespace RecipeeAPI.Services.RecipeService
         public async Task<ServiceResponse<GetRecipeDTO>> AddRecipe(AddRecipeDTO newRecipe)
         {
             ServiceResponse<GetRecipeDTO> response = new ServiceResponse<GetRecipeDTO>();
-
-            try
-            {
-                Recipe recipe = _mapper.Map<Recipe>(newRecipe);
-                recipe.Creator = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId());
-                await _context.Recipes.AddAsync(recipe);
-                await _context.SaveChangesAsync();
-                response.Data = _mapper.Map<GetRecipeDTO>(recipe);
-                response.Message = "Recipe successfully added.";
-            }
-            catch (Exception ex)
-            {
-                response.Success = false;
-                response.Message = ex.Message;
-            }
-
+            Recipe recipe = _mapper.Map<Recipe>(newRecipe);
+            recipe.Creator = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId());
+            await _context.Recipes.AddAsync(recipe);
+            await _context.SaveChangesAsync();
+            response.Data = _mapper.Map<GetRecipeDTO>(recipe);
             return response;
         }
 
@@ -176,7 +165,7 @@ namespace RecipeeAPI.Services.RecipeService
             return response;
         }
 
-        public string GetUserId()
+        private string GetUserId()
         {
             return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
