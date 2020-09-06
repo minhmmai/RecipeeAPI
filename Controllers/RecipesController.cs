@@ -8,12 +8,18 @@ using RecipeeAPI.Services.RecipeService;
 namespace RecipeeAPI.Controllers
 {
     [ApiController]
-    [Authorize]
     [Route("[controller]")]
     public class RecipesController : ControllerBase
     {
         public RecipesController()
         {
+        }
+
+        [HttpGet]
+        [Authorize]
+        public string Test()
+        {
+            return "Success";
         }
     }
 }
