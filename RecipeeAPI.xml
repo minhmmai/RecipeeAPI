@@ -1,0 +1,218 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RecipeeAPI</name>
+    </assembly>
+    <members>
+        <member name="T:RecipeeAPI.AutoMapperProfile">
+            <summary>
+            Class to create AutoMapper profile
+            </summary>
+        </member>
+        <member name="M:RecipeeAPI.AutoMapperProfile.#ctor">
+            <summary>
+            AutoMapper profile
+            </summary>
+        </member>
+        <member name="T:RecipeeAPI.Controllers.AuthController">
+            <summary>
+            Controller for all methods associated with authentication.
+            </summary>
+        </member>
+        <member name="M:RecipeeAPI.Controllers.AuthController.#ctor(RecipeeAPI.Services.AuthService.IAuthService)">
+            <summary>
+            Constructor that initializes the authentication controller.
+            </summary>
+            <param name="auth">The services available to authentication.</param>
+        </member>
+        <member name="M:RecipeeAPI.Controllers.AuthController.Register(RecipeeAPI.DTOs.User.RegisterUserDTO)">
+            <summary>
+            Register a new user account.
+            </summary>
+            <param name="request">The DTO for registering a user account.</param>
+            <returns></returns>
+        </member>
+        <member name="M:RecipeeAPI.Controllers.AuthController.Login(RecipeeAPI.DTOs.User.LoginUserDTO)">
+            <summary>
+                Login a user
+            </summary>
+            <param name="request">The DTO for logging in a user.</param>
+            <returns></returns>
+        </member>
+        <member name="T:RecipeeAPI.Controllers.RecipesController">
+            <summary>
+            Controller for all methods associated with a recipe.
+            </summary>
+        </member>
+        <member name="M:RecipeeAPI.Controllers.RecipesController.#ctor">
+            <summary>
+            Constructor that initializes the recipe controller.
+            </summary>
+        </member>
+        <member name="M:RecipeeAPI.Controllers.RecipesController.Test">
+            <summary>
+            Test authorization
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:RecipeeAPI.Controllers.UsersController">
+            <summary>
+            Controller for all methods associated with a user account.
+            </summary>
+        </member>
+        <member name="M:RecipeeAPI.Controllers.UsersController.#ctor(RecipeeAPI.Data.RecipeeContext,RecipeeAPI.Services.UserService.IUserService)">
+            <summary>
+            Constructor that initializes the user controller.
+            </summary>
+            <param name="context">The Recipee database context.</param>
+            <param name="userService">The services available to a user account.</param>
+        </member>
+        <member name="M:RecipeeAPI.Controllers.UsersController.GetUserById(System.String)">
+            <summary>
+            Get a user account information using its Id.
+            </summary>
+            <param name="id">The Id of the user account.</param>
+            <returns>The information related to the user account.</returns>
+        </member>
+        <member name="M:RecipeeAPI.Controllers.UsersController.UpdateDetails(RecipeeAPI.DTOs.User.UpdateUserDTO)">
+            <summary>
+            Update account details of the current user.
+            </summary>
+            <param name="updatedDetails"></param>
+            <returns>User account with the updated details.</returns>
+        </member>
+        <member name="M:RecipeeAPI.Controllers.UsersController.GetUserDetails">
+            <summary>
+            Get the current logged in user account information.
+            </summary>
+            <returns>The user account information.</returns>
+        </member>
+        <member name="T:RecipeeAPI.Data.DbInitializer">
+            <summary>
+            Class used to seed the database.
+            </summary>
+        </member>
+        <member name="M:RecipeeAPI.Data.DbInitializer.Initialize(RecipeeAPI.Data.RecipeeContext)">
+            <summary>
+            Write initial data to the database.
+            </summary>
+            <param name="context">The context of the database to be seeded.</param>
+        </member>
+        <member name="T:RecipeeAPI.Data.RecipeeContext">
+            <summary>
+            The Recipee API database context.
+            </summary>
+        </member>
+        <member name="M:RecipeeAPI.Data.RecipeeContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{RecipeeAPI.Data.RecipeeContext})">
+            <summary>
+            Contructor to initialze the context.
+            </summary>
+            <param name="options"></param>
+        </member>
+        <member name="P:RecipeeAPI.Data.RecipeeContext.Recipes">
+            <summary>
+            The recipes context.
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.Data.RecipeeContext.Ingredients">
+            <summary>
+            The recipe's ingredient context.
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.Data.RecipeeContext.Methods">
+            <summary>
+            The recipe's method context.
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.Data.RecipeeContext.Reviews">
+            <summary>
+            The recipe's reviews context.
+            </summary>
+        </member>
+        <member name="T:RecipeeAPI.DTOs.User.GetUserDTO">
+            <summary>
+            DTO for retreiving user's info
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.DTOs.User.GetUserDTO.FirstName">
+            <summary>
+            User's first name
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.DTOs.User.GetUserDTO.LastName">
+            <summary>
+            User's last name
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.DTOs.User.GetUserDTO.Email">
+            <summary>
+            User's email address
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.DTOs.User.GetUserDTO.Recipes">
+            <summary>
+            List of user's recipes
+            </summary>
+        </member>
+        <member name="T:RecipeeAPI.DTOs.User.LoginUserDTO">
+            <summary>
+            DTO for logging in a user
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.DTOs.User.LoginUserDTO.Email">
+            <summary>
+            User's email address
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.DTOs.User.LoginUserDTO.Password">
+            <summary>
+            User account password
+            </summary>
+        </member>
+        <member name="T:RecipeeAPI.DTOs.User.RegisterUserDTO">
+            <summary>
+            Register user DTO
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.DTOs.User.RegisterUserDTO.FirstName">
+            <summary>
+            User's first name
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.DTOs.User.RegisterUserDTO.LastName">
+            <summary>
+            User's last name
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.DTOs.User.RegisterUserDTO.Email">
+            <summary>
+            User's email address
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.DTOs.User.RegisterUserDTO.Password">
+            <summary>
+            User's password
+            </summary>
+        </member>
+        <member name="T:RecipeeAPI.DTOs.User.UpdateUserDTO">
+            <summary>
+            DTO for updating user's info
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.DTOs.User.UpdateUserDTO.FirstName">
+            <summary>
+            New user's first name
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.DTOs.User.UpdateUserDTO.LastName">
+            <summary>
+            New user's last name
+            </summary>
+        </member>
+        <member name="P:RecipeeAPI.DTOs.User.UpdateUserDTO.Email">
+            <summary>
+            New user's email address
+            </summary>
+        </member>
+    </members>
+</doc>

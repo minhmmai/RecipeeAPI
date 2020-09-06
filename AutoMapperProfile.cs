@@ -8,8 +8,14 @@ using RecipeeAPI.Models;
 
 namespace RecipeeAPI
 {
+    /// <summary>
+    /// Class to create AutoMapper profile
+    /// </summary>
     public class AutoMapperProfile : Profile
     {
+        /// <summary>
+        /// AutoMapper profile
+        /// </summary>
         public AutoMapperProfile()
         {
             CreateMap<Recipe, GetRecipeDTO>();

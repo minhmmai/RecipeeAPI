@@ -13,6 +13,9 @@ using RecipeeAPI.Services.UserService;
 
 namespace RecipeeAPI.Controllers
 {
+    /// <summary>
+    /// Controller for all methods associated with a user account.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     [Authorize]
@@ -20,13 +23,22 @@ namespace RecipeeAPI.Controllers
     {
         private RecipeeContext _context;
         private IUserService _userService;
-
+        /// <summary>
+        /// Constructor that initializes the user controller.
+        /// </summary>
+        /// <param name="context">The Recipee database context.</param>
+        /// <param name="userService">The services available to a user account.</param>
         public UsersController(RecipeeContext context, IUserService userService)
         {
             _context = context;
             _userService = userService;
         }
 
+        /// <summary>
+        /// Get a user account information using its Id.
+        /// </summary>
+        /// <param name="id">The Id of the user account.</param>
+        /// <returns>The information related to the user account.</returns>
         [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(string id)
@@ -39,6 +51,11 @@ namespace RecipeeAPI.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// Update account details of the current user.
+        /// </summary>
+        /// <param name="updatedDetails"></param>
+        /// <returns>User account with the updated details.</returns>
         [HttpPost("me")]
         public async Task<IActionResult> UpdateDetails(UpdateUserDTO updatedDetails)
         {
@@ -50,6 +67,10 @@ namespace RecipeeAPI.Controllers
             return Ok(await _userService.UpdateUserDetails(updatedDetails));
         }
 
+        /// <summary>
+        /// Get the current logged in user account information.
+        /// </summary>
+        /// <returns>The user account information.</returns>
         [HttpGet("me")]
         public async Task<IActionResult> GetUserDetails()
         {

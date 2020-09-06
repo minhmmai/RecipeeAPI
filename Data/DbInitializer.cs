@@ -7,8 +7,15 @@ using System.Threading.Tasks;
 
 namespace RecipeeAPI.Data
 {
+    /// <summary>
+    /// Class used to seed the database.
+    /// </summary>
     public static class DbInitializer
     {
+        /// <summary>
+        /// Write initial data to the database.
+        /// </summary>
+        /// <param name="context">The context of the database to be seeded.</param>
         public static void Initialize(RecipeeContext context)
         {
             context.Database.EnsureCreated();

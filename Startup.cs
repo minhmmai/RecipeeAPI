@@ -16,6 +16,8 @@ using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Reflection;
+using System.IO;
 
 namespace RecipeeAPI
 {
@@ -99,6 +101,9 @@ namespace RecipeeAPI
                         Title = "Recipee API",
                         Version = "1"
                     });
+                var xmlCommentFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentFile);
+                options.IncludeXmlComments(xmlCommentsFullPath);
             });
         }
 
@@ -113,7 +118,8 @@ namespace RecipeeAPI
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("swagger/recipeeapi/swagger.json", "Recipee Api");
+                options.SwaggerEndpoint("/swagger/RecipeeAPI/swagger.json", "Recipee Api");
+                options.RoutePrefix = "";
             });
             app.UseRouting();
             app.UseAuthentication();

@@ -156,25 +156,6 @@ namespace RecipeeAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Member",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdentityId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Member", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Member_AspNetUsers_IdentityId",
-                        column: x => x.IdentityId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Recipe",
                 columns: table => new
                 {
@@ -310,11 +291,6 @@ namespace RecipeeAPI.Migrations
                 column: "RecipeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Member_IdentityId",
-                table: "Member",
-                column: "IdentityId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Method_RecipeId",
                 table: "Method",
                 column: "RecipeId");
@@ -349,9 +325,6 @@ namespace RecipeeAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Ingredient");
-
-            migrationBuilder.DropTable(
-                name: "Member");
 
             migrationBuilder.DropTable(
                 name: "Method");
