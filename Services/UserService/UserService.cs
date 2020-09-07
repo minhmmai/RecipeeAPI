@@ -71,10 +71,14 @@ namespace RecipeeAPI.Services.UserService
             return response;
         }
 
-        private string GetUserId()
+        public string GetUserId()
         {
             return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
+        public async Task<bool> UserExist(string username)
+        {
+            return await _context.Users.AnyAsync(u => u.UserName.ToLower() == username.ToLower());
+        }
     }
 }

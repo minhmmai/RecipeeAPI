@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using RecipeeAPI.Data;
 using RecipeeAPI.DTOs.User;
 using RecipeeAPI.Models;
+using RecipeeAPI.Services.UserService;
 using SQLitePCL;
 using System;
 using System.Collections.Generic;
@@ -19,15 +20,15 @@ namespace RecipeeAPI.Services.AuthService
 {
     public class AuthService : IAuthService
     {
-        private RecipeeContext _context;
+        private readonly RecipeeContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IUserService _userService;
 
-        public AuthService(RecipeeContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AuthService(RecipeeContext context, UserManager<ApplicationUser> userManager, IUserService userService)
         {
             _context = context;
             _userManager = userManager;
-            _roleManager = roleManager;
+            _userService = userService;
         }
 
         public Task<ServiceResponse<string>> Login(LoginUserDTO loginUserDTO)
@@ -41,6 +42,13 @@ namespace RecipeeAPI.Services.AuthService
 
             try
             {
+                if(await _userService.UserExist(registerUserDTO.Email))
+                {
+                    response.Success = false;
+                    response.Message = "User already exist";
+                    return response;
+                }
+
                 ApplicationUser newUser = new ApplicationUser
                 {
                     UserName = registerUserDTO.Email,
@@ -60,7 +68,7 @@ namespace RecipeeAPI.Services.AuthService
 
                 ApplicationUser createdUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == registerUserDTO.Email);
 
-                await _userManager.AddToRoleAsync(createdUser, "member");
+                await _userManager.AddClaimAsync(createdUser, new Claim(ClaimTypes.Role, "member"));
 
                 response.Data = createdUser.Id;
                 response.Message = "Successfully registered user";
@@ -72,11 +80,6 @@ namespace RecipeeAPI.Services.AuthService
             }
 
             return response;
-        }
-
-        public Task<bool> UserExist(string email)
-        {
-            throw new NotImplementedException();
         }
     }
 }

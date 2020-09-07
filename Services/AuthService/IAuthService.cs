@@ -11,6 +11,5 @@ namespace RecipeeAPI.Services.AuthService
     {
         Task<ServiceResponse<string>> Register(RegisterUserDTO registerUserDTO);
         Task<ServiceResponse<string>> Login(LoginUserDTO loginUserDTO);
-        Task<bool> UserExist(string email);
     }
 }
