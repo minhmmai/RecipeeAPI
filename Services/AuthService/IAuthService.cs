@@ -1,4 +1,5 @@
-﻿using RecipeeAPI.DTOs.User;
+﻿using Azure.Core;
+using RecipeeAPI.DTOs.User;
 using RecipeeAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,6 @@ namespace RecipeeAPI.Services.AuthService
     public interface IAuthService
     {
         Task<ServiceResponse<string>> Register(RegisterUserDTO registerUserDTO);
-        Task<ServiceResponse<string>> Login(LoginUserDTO loginUserDTO);
-        Task<bool> UserExist(string email);
+        Task<ServiceResponse<AccessToken>> Login(LoginUserDTO loginUserDTO);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using RecipeeAPI.Data;
 using RecipeeAPI.DTOs.User;
 using RecipeeAPI.Models;
+using RecipeeAPI.Services.UserService;
 using SQLitePCL;
 using System;
 using System.Collections.Generic;
@@ -19,20 +21,45 @@ namespace RecipeeAPI.Services.AuthService
 {
     public class AuthService : IAuthService
     {
-        private RecipeeContext _context;
+        private readonly RecipeeContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IUserService _userService;
+        private readonly IConfiguration _configuration;
 
-        public AuthService(RecipeeContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AuthService(RecipeeContext context, UserManager<ApplicationUser> userManager, IUserService userService, IConfiguration configuration)
         {
             _context = context;
             _userManager = userManager;
-            _roleManager = roleManager;
+            _userService = userService;
+            _configuration = configuration;
         }
 
-        public Task<ServiceResponse<string>> Login(LoginUserDTO loginUserDTO)
+        public async Task<ServiceResponse<AccessToken>> Login(LoginUserDTO loginUserDTO)
         {
-            throw new NotImplementedException();
+            ServiceResponse<AccessToken> response = new ServiceResponse<AccessToken>();
+
+            try
+            {
+                ApplicationUser user = await _userManager.FindByNameAsync(loginUserDTO.Email);
+                Boolean checkLoginDetails = await _userManager.CheckPasswordAsync(user, loginUserDTO.Password);
+
+                if (user == null || !checkLoginDetails)
+                {
+                    response.Success = false;
+                    response.Message = "Invalid login details";
+                    return response;
+                }
+
+                response.Data = CreateToken(user);
+                response.Message = "Login successful";
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+
+            return response;
         }
 
         public async Task<ServiceResponse<string>> Register(RegisterUserDTO registerUserDTO)
@@ -41,6 +68,13 @@ namespace RecipeeAPI.Services.AuthService
 
             try
             {
+                if (await _userService.UserExist(registerUserDTO.Email))
+                {
+                    response.Success = false;
+                    response.Message = "User already exist";
+                    return response;
+                }
+
                 ApplicationUser newUser = new ApplicationUser
                 {
                     UserName = registerUserDTO.Email,
@@ -60,7 +94,7 @@ namespace RecipeeAPI.Services.AuthService
 
                 ApplicationUser createdUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == registerUserDTO.Email);
 
-                await _userManager.AddToRoleAsync(createdUser, "member");
+                await _userManager.AddClaimAsync(createdUser, new Claim(ClaimTypes.Role, "member"));
 
                 response.Data = createdUser.Id;
                 response.Message = "Successfully registered user";
@@ -74,9 +108,42 @@ namespace RecipeeAPI.Services.AuthService
             return response;
         }
 
-        public Task<bool> UserExist(string email)
+        public AccessToken CreateToken(ApplicationUser user)
         {
-            throw new NotImplementedException();
+            var userRoles = _userManager.GetClaimsAsync(user).Result.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
+
+            DateTime dateTimeNow = DateTime.Now;
+            DateTime dateTimeExpiry = dateTimeNow.AddMinutes(60.0);
+
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("user_id", user.Id)
+            };
+
+            foreach (var item in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, item));
+            }
+
+            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                _configuration["AuthSettings:SecretKey"]));
+
+            SigningCredentials signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            JwtSecurityToken jwtSecurityToken = new JwtSecurityToken(
+                _configuration["AuthSettings:ValidIssuer"],
+                _configuration["AuthSettings:ValidAudience"],
+                claims,
+                dateTimeNow,
+                dateTimeExpiry,
+                signingCredentials
+            );
+
+            JwtSecurityTokenHandler _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+
+            return new AccessToken(_jwtSecurityTokenHandler.WriteToken(jwtSecurityToken), dateTimeExpiry);
         }
     }
 }

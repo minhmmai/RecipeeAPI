@@ -11,42 +11,63 @@ using RecipeeAPI.Data;
 using RecipeeAPI.DTOs.Ingredient;
 using RecipeeAPI.DTOs.Recipe;
 using RecipeeAPI.Models;
+using RecipeeAPI.Services.UserService;
 
 namespace RecipeeAPI.Services.RecipeService
 {
     public class RecipeService : IRecipeService
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly RecipeeContext _context;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public RecipeService(RecipeeContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public RecipeService(RecipeeContext context, IMapper mapper, IUserService userService)
         {
-            _httpContextAccessor = httpContextAccessor;
             _context = context;
             _mapper = mapper;
+            _userService = userService;
         }
         public async Task<ServiceResponse<GetRecipeDTO>> AddRecipe(AddRecipeDTO newRecipe)
         {
             ServiceResponse<GetRecipeDTO> response = new ServiceResponse<GetRecipeDTO>();
-            Recipe recipe = _mapper.Map<Recipe>(newRecipe);
-            recipe.Creator = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId());
-            await _context.Recipes.AddAsync(recipe);
-            await _context.SaveChangesAsync();
-            response.Data = _mapper.Map<GetRecipeDTO>(recipe);
+
+            try
+            {
+                Recipe recipe = _mapper.Map<Recipe>(newRecipe);
+                recipe.User = await _context.Users.FirstOrDefaultAsync(u => u.Id == _userService.GetUserId());
+                await _context.Recipes.AddAsync(recipe);
+                await _context.SaveChangesAsync();
+                response.Data = _mapper.Map<GetRecipeDTO>(recipe);
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
             return response;
         }
 
         public async Task<ServiceResponse<List<GetRecipeDTO>>> GetAllRecipes()
         {
             ServiceResponse<List<GetRecipeDTO>> response = new ServiceResponse<List<GetRecipeDTO>>();
-            List<Recipe> dbRecipes = await _context.Recipes
-                .Where(r => r.UserId == GetUserId())
-                .Include(r => r.Ingredients)
-                .Include(r => r.Methods)
-                .AsNoTracking()
-                .ToListAsync();
-            response.Data = (dbRecipes.Select(r => _mapper.Map<GetRecipeDTO>(r))).ToList();
+
+            try
+            {
+                List<Recipe> dbRecipes = await _context.Recipes
+                    .Where(r => r.UserId == _userService.GetUserId())
+                    .Include(r => r.Ingredients)
+                    .Include(r => r.Methods)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                response.Data = (dbRecipes.Select(r => _mapper.Map<GetRecipeDTO>(r))).ToList();
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+
             return response;
         }
 
@@ -71,7 +92,8 @@ namespace RecipeeAPI.Services.RecipeService
                     .Include(r => r.Ingredients)
                     .Include(r => r.Methods)
                     .FirstOrDefaultAsync(r => r.Id == id);
-                if (recipe.UserId == GetUserId())
+
+                if (recipe.UserId == _userService.GetUserId())
                 {
                     recipe.Name = updatedRecipe.Name;
                     recipe.Description = updatedRecipe.Description;
@@ -79,14 +101,16 @@ namespace RecipeeAPI.Services.RecipeService
 
                     if (updatedRecipe.Ingredients.Any())
                     {
+                        //Remove an existing ingredient if it is not present in the DTO
                         foreach (var ingredient in recipe.Ingredients)
                         {
-                            if (!updatedRecipe.Ingredients.Any(c => c.Id == ingredient.Id))
+                            if (!updatedRecipe.Ingredients.Any(i => i.Id == ingredient.Id))
                             {
                                 _context.Ingredients.Remove(ingredient);
                             }
                         }
 
+                        //Update each existing ingredient with the one from the DTO
                         foreach (var ingredient in updatedRecipe.Ingredients)
                         {
                             var ingredientToUpdate = recipe.Ingredients.FirstOrDefault(i => i.Id == ingredient.Id);
@@ -115,6 +139,7 @@ namespace RecipeeAPI.Services.RecipeService
 
                     if (updatedRecipe.Methods.Any())
                     {
+                        //Remove existing method if it is not present in the DTO
                         foreach (var method in recipe.Methods)
                         {
                             if (!updatedRecipe.Methods.Any(m => m.Index == method.Id))
@@ -123,6 +148,7 @@ namespace RecipeeAPI.Services.RecipeService
                             }
                         }
 
+                        //Update each existing method with the one from the DTO
                         foreach (var method in updatedRecipe.Methods)
                         {
                             var methodToUpdate = recipe.Methods.FirstOrDefault(m => m.Id == method.Id);
@@ -163,11 +189,6 @@ namespace RecipeeAPI.Services.RecipeService
             }
 
             return response;
-        }
-
-        private string GetUserId()
-        {
-            return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
     }
 }

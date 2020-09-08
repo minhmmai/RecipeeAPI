@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Reflection;
 using System.IO;
+using System.Security.Claims;
 
 namespace RecipeeAPI
 {
@@ -88,10 +89,14 @@ namespace RecipeeAPI
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AuthSettings:SecretKey"])),
 
                         RequireExpirationTime = false,
-                        ValidateLifetime = true,
-                        ClockSkew = TimeSpan.Zero
+                        ValidateLifetime = true
                     };
                 });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RegisteredUser", policy => policy.RequireClaim(ClaimTypes.Role, "member", "moderator", "admin"));
+            });
 
             services.AddSwaggerGen(options =>
             {

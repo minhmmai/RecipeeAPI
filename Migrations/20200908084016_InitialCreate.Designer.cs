@@ -10,7 +10,7 @@ using RecipeeAPI.Data;
 namespace RecipeeAPI.Migrations
 {
     [DbContext(typeof(RecipeeContext))]
-    [Migration("20200905020719_InitialCreate")]
+    [Migration("20200908084016_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -264,23 +264,6 @@ namespace RecipeeAPI.Migrations
                     b.ToTable("Ingredient");
                 });
 
-            modelBuilder.Entity("RecipeeAPI.Models.Member", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("IdentityId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdentityId");
-
-                    b.ToTable("Member");
-                });
-
             modelBuilder.Entity("RecipeeAPI.Models.Method", b =>
                 {
                     b.Property<int>("Id")
@@ -318,9 +301,6 @@ namespace RecipeeAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CreatorId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(500)")
@@ -340,11 +320,11 @@ namespace RecipeeAPI.Migrations
                         .HasColumnType("rowversion");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatorId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Recipe");
                 });
@@ -438,13 +418,6 @@ namespace RecipeeAPI.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RecipeeAPI.Models.Member", b =>
-                {
-                    b.HasOne("RecipeeAPI.Models.ApplicationUser", "Identity")
-                        .WithMany()
-                        .HasForeignKey("IdentityId");
-                });
-
             modelBuilder.Entity("RecipeeAPI.Models.Method", b =>
                 {
                     b.HasOne("RecipeeAPI.Models.Recipe", "Recipe")
@@ -456,9 +429,9 @@ namespace RecipeeAPI.Migrations
 
             modelBuilder.Entity("RecipeeAPI.Models.Recipe", b =>
                 {
-                    b.HasOne("RecipeeAPI.Models.ApplicationUser", "Creator")
+                    b.HasOne("RecipeeAPI.Models.ApplicationUser", "User")
                         .WithMany("Recipes")
-                        .HasForeignKey("CreatorId");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("RecipeeAPI.Models.Review", b =>
