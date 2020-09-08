@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,17 +24,42 @@ namespace RecipeeAPI.Services.AuthService
         private readonly RecipeeContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserService _userService;
+        private readonly IConfiguration _configuration;
 
-        public AuthService(RecipeeContext context, UserManager<ApplicationUser> userManager, IUserService userService)
+        public AuthService(RecipeeContext context, UserManager<ApplicationUser> userManager, IUserService userService, IConfiguration configuration)
         {
             _context = context;
             _userManager = userManager;
             _userService = userService;
+            _configuration = configuration;
         }
 
-        public Task<ServiceResponse<string>> Login(LoginUserDTO loginUserDTO)
+        public async Task<ServiceResponse<AccessToken>> Login(LoginUserDTO loginUserDTO)
         {
-            throw new NotImplementedException();
+            ServiceResponse<AccessToken> response = new ServiceResponse<AccessToken>();
+
+            try
+            {
+                ApplicationUser user = await _userManager.FindByNameAsync(loginUserDTO.Email);
+                Boolean checkLoginDetails = await _userManager.CheckPasswordAsync(user, loginUserDTO.Password);
+
+                if (user == null || !checkLoginDetails)
+                {
+                    response.Success = false;
+                    response.Message = "Invalid login details";
+                    return response;
+                }
+
+                response.Data = CreateToken(user);
+                response.Message = "Login successful";
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+
+            return response;
         }
 
         public async Task<ServiceResponse<string>> Register(RegisterUserDTO registerUserDTO)
@@ -42,7 +68,7 @@ namespace RecipeeAPI.Services.AuthService
 
             try
             {
-                if(await _userService.UserExist(registerUserDTO.Email))
+                if (await _userService.UserExist(registerUserDTO.Email))
                 {
                     response.Success = false;
                     response.Message = "User already exist";
@@ -80,6 +106,44 @@ namespace RecipeeAPI.Services.AuthService
             }
 
             return response;
+        }
+
+        public AccessToken CreateToken(ApplicationUser user)
+        {
+            var userRoles = _userManager.GetClaimsAsync(user).Result.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
+
+            DateTime dateTimeNow = DateTime.Now;
+            DateTime dateTimeExpiry = dateTimeNow.AddMinutes(60.0);
+
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                //new Claim(ClaimTypes.Role, userRole.First())
+            };
+
+            foreach (var item in userRoles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, item));
+            }
+
+            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                _configuration["AuthSettings:SecretKey"]));
+
+            SigningCredentials signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            JwtSecurityToken jwtSecurityToken = new JwtSecurityToken(
+                _configuration["AuthSettings:ValidIssuer"],
+                _configuration["AuthSettings:ValidAudience"],
+                claims,
+                dateTimeNow,
+                dateTimeExpiry,
+                signingCredentials
+            );
+
+            JwtSecurityTokenHandler _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+
+            return new AccessToken(_jwtSecurityTokenHandler.WriteToken(jwtSecurityToken), dateTimeExpiry);
         }
     }
 }

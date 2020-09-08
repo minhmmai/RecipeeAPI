@@ -88,8 +88,7 @@ namespace RecipeeAPI
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AuthSettings:SecretKey"])),
 
                         RequireExpirationTime = false,
-                        ValidateLifetime = true,
-                        ClockSkew = TimeSpan.Zero
+                        ValidateLifetime = true
                     };
                 });
 

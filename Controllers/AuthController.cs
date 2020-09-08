@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Azure.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RecipeeAPI.DTOs.User;
@@ -54,7 +55,7 @@ namespace RecipeeAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginUserDTO request)
         {
-            ServiceResponse<string> response = await _auth.Login(request);
+            ServiceResponse<AccessToken> response = await _auth.Login(request);
             if (!response.Success)
             {
                 return BadRequest(response);
