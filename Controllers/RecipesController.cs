@@ -26,6 +26,9 @@ namespace RecipeeAPI.Controllers
             _recipeService = recipeService;
         }
 
+        /// <summary>
+        /// Get all recipes created by the logged in user
+        /// </summary>
         [HttpGet()]
         [Authorize(Policy = "RegisteredUser")]
         public async Task<IActionResult> GetAllRecipes()
@@ -50,6 +53,25 @@ namespace RecipeeAPI.Controllers
         public async Task<IActionResult> AddRecipe([FromBody] AddRecipeDTO request)
         {
             ServiceResponse<GetRecipeDTO> response = await _recipeService.AddRecipe(request);
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Update a recipe
+        /// </summary>
+        /// <param name="recipeId">Id of the recipe to be updated</param>
+        /// <param name="request">DTO for updating a recipe</param>
+        [HttpPut("{recipeId}")]
+        [Authorize(Policy = "RegisteredUser")]
+        public async Task<IActionResult> UpdateRecipe(int recipeId, UpdateRecipeDTO request)
+        {
+            ServiceResponse<GetRecipeDTO> response = await _recipeService.UpdateRecipe(recipeId, request);
 
             if (!response.Success)
             {

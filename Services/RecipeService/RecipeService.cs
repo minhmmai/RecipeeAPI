@@ -92,6 +92,7 @@ namespace RecipeeAPI.Services.RecipeService
                     .Include(r => r.Ingredients)
                     .Include(r => r.Methods)
                     .FirstOrDefaultAsync(r => r.Id == id);
+
                 if (recipe.UserId == _userService.GetUserId())
                 {
                     recipe.Name = updatedRecipe.Name;
@@ -102,7 +103,7 @@ namespace RecipeeAPI.Services.RecipeService
                     {
                         foreach (var ingredient in recipe.Ingredients)
                         {
-                            if (!updatedRecipe.Ingredients.Any(c => c.Id == ingredient.Id))
+                            if (!updatedRecipe.Ingredients.Any(i => i.Id == ingredient.Id))
                             {
                                 _context.Ingredients.Remove(ingredient);
                             }

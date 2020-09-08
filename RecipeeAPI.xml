@@ -49,12 +49,24 @@
             Constructor that initializes the recipe controller.
             </summary>
         </member>
+        <member name="M:RecipeeAPI.Controllers.RecipesController.GetAllRecipes">
+            <summary>
+            Get all recipes created by the logged in user
+            </summary>
+        </member>
         <member name="M:RecipeeAPI.Controllers.RecipesController.AddRecipe(RecipeeAPI.DTOs.Recipe.AddRecipeDTO)">
             <summary>
             Add a recipe
             </summary>
             <param name="request">DTO for adding a recipe</param>
             <returns>Added recipe (GetRecipeDTO)</returns>
+        </member>
+        <member name="M:RecipeeAPI.Controllers.RecipesController.UpdateRecipe(System.Int32,RecipeeAPI.DTOs.Recipe.UpdateRecipeDTO)">
+            <summary>
+            Update a recipe
+            </summary>
+            <param name="recipeId">Id of the recipe to be updated</param>
+            <param name="request">DTO for updating a recipe</param>
         </member>
         <member name="T:RecipeeAPI.Controllers.UsersController">
             <summary>
