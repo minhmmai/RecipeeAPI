@@ -54,6 +54,13 @@
             Get all recipes created by the logged in user
             </summary>
         </member>
+        <member name="M:RecipeeAPI.Controllers.RecipesController.GetRecipeById(System.Int32)">
+            <summary>
+            Get a recipe using its Id
+            </summary>
+            <param name="recipeId">Id of the recipe to retrieve</param>
+            <returns></returns>
+        </member>
         <member name="M:RecipeeAPI.Controllers.RecipesController.AddRecipe(RecipeeAPI.DTOs.Recipe.AddRecipeDTO)">
             <summary>
             Add a recipe

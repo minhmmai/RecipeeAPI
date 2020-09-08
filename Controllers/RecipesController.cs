@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +35,25 @@ namespace RecipeeAPI.Controllers
         public async Task<IActionResult> GetAllRecipes()
         {
             ServiceResponse<List<GetRecipeDTO>> response = await _recipeService.GetAllRecipes();
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Get a recipe using its Id
+        /// </summary>
+        /// <param name="recipeId">Id of the recipe to retrieve</param>
+        /// <returns></returns>
+        [HttpGet("{recipeId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetRecipeById(int recipeId)
+        {
+            ServiceResponse<GetRecipeDTO> response = await _recipeService.GetRecipeById(recipeId);
 
             if (!response.Success)
             {
