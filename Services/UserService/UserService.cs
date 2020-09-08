@@ -73,7 +73,7 @@ namespace RecipeeAPI.Services.UserService
 
         public string GetUserId()
         {
-            return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return _httpContextAccessor.HttpContext.User.FindFirstValue("user_id");
         }
 
         public async Task<bool> UserExist(string username)

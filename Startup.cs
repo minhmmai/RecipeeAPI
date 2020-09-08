@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Reflection;
 using System.IO;
+using System.Security.Claims;
 
 namespace RecipeeAPI
 {
@@ -91,6 +92,11 @@ namespace RecipeeAPI
                         ValidateLifetime = true
                     };
                 });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RegisteredUser", policy => policy.RequireClaim(ClaimTypes.Role, "member", "moderator", "admin"));
+            });
 
             services.AddSwaggerGen(options =>
             {

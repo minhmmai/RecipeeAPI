@@ -119,7 +119,7 @@ namespace RecipeeAPI.Services.AuthService
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                //new Claim(ClaimTypes.Role, userRole.First())
+                new Claim("user_id", user.Id)
             };
 
             foreach (var item in userRoles)

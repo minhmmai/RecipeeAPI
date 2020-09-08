@@ -12,5 +12,6 @@ namespace RecipeeAPI.Services.UserService
         Task<ServiceResponse<GetUserDTO>> UpdateUserDetails(UpdateUserDTO updatedDetails);
         Task<ServiceResponse<GetUserDTO>> GetDetails();
         Task<bool> UserExist(string email);
+        string GetUserId();
     }
 }

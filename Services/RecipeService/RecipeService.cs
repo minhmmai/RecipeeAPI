@@ -11,42 +11,63 @@ using RecipeeAPI.Data;
 using RecipeeAPI.DTOs.Ingredient;
 using RecipeeAPI.DTOs.Recipe;
 using RecipeeAPI.Models;
+using RecipeeAPI.Services.UserService;
 
 namespace RecipeeAPI.Services.RecipeService
 {
     public class RecipeService : IRecipeService
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly RecipeeContext _context;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public RecipeService(RecipeeContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public RecipeService(RecipeeContext context, IMapper mapper, IUserService userService)
         {
-            _httpContextAccessor = httpContextAccessor;
             _context = context;
             _mapper = mapper;
+            _userService = userService;
         }
         public async Task<ServiceResponse<GetRecipeDTO>> AddRecipe(AddRecipeDTO newRecipe)
         {
             ServiceResponse<GetRecipeDTO> response = new ServiceResponse<GetRecipeDTO>();
-            Recipe recipe = _mapper.Map<Recipe>(newRecipe);
-            recipe.Creator = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId());
-            await _context.Recipes.AddAsync(recipe);
-            await _context.SaveChangesAsync();
-            response.Data = _mapper.Map<GetRecipeDTO>(recipe);
+
+            try
+            {
+                Recipe recipe = _mapper.Map<Recipe>(newRecipe);
+                recipe.User = await _context.Users.FirstOrDefaultAsync(u => u.Id == _userService.GetUserId());
+                await _context.Recipes.AddAsync(recipe);
+                await _context.SaveChangesAsync();
+                response.Data = _mapper.Map<GetRecipeDTO>(recipe);
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
             return response;
         }
 
         public async Task<ServiceResponse<List<GetRecipeDTO>>> GetAllRecipes()
         {
             ServiceResponse<List<GetRecipeDTO>> response = new ServiceResponse<List<GetRecipeDTO>>();
-            List<Recipe> dbRecipes = await _context.Recipes
-                .Where(r => r.UserId == GetUserId())
-                .Include(r => r.Ingredients)
-                .Include(r => r.Methods)
-                .AsNoTracking()
-                .ToListAsync();
-            response.Data = (dbRecipes.Select(r => _mapper.Map<GetRecipeDTO>(r))).ToList();
+
+            try
+            {
+                List<Recipe> dbRecipes = await _context.Recipes
+                    .Where(r => r.UserId == _userService.GetUserId())
+                    .Include(r => r.Ingredients)
+                    .Include(r => r.Methods)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                response.Data = (dbRecipes.Select(r => _mapper.Map<GetRecipeDTO>(r))).ToList();
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+
             return response;
         }
 
@@ -71,7 +92,7 @@ namespace RecipeeAPI.Services.RecipeService
                     .Include(r => r.Ingredients)
                     .Include(r => r.Methods)
                     .FirstOrDefaultAsync(r => r.Id == id);
-                if (recipe.UserId == GetUserId())
+                if (recipe.UserId == _userService.GetUserId())
                 {
                     recipe.Name = updatedRecipe.Name;
                     recipe.Description = updatedRecipe.Description;
@@ -163,11 +184,6 @@ namespace RecipeeAPI.Services.RecipeService
             }
 
             return response;
-        }
-
-        private string GetUserId()
-        {
-            return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
     }
 }
