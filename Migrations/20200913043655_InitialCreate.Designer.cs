@@ -10,7 +10,7 @@ using RecipeeAPI.Data;
 namespace RecipeeAPI.Migrations
 {
     [DbContext(typeof(RecipeeContext))]
-    [Migration("20200908084016_InitialCreate")]
+    [Migration("20200913043655_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
