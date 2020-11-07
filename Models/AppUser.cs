@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace RecipeeAPI.Models
 {
     [Table("User")]
-    public class ApplicationUser : IdentityUser
+    public class AppUser : IdentityUser
     {
         [StringLength(50)]
         [Required]

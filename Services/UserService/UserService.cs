@@ -27,7 +27,7 @@ namespace RecipeeAPI.Services.UserService
         public async Task<ServiceResponse<GetUserDTO>> GetDetails()
         {
             ServiceResponse<GetUserDTO> response = new ServiceResponse<GetUserDTO>();
-            ApplicationUser user = await _context.Users
+            AppUser user = await _context.Users
                 .Include(u => u.Recipes)
                 .FirstOrDefaultAsync(u => u.Id == GetUserId());
             response.Data = _mapper.Map<GetUserDTO>(user);
@@ -39,7 +39,7 @@ namespace RecipeeAPI.Services.UserService
             ServiceResponse<GetUserDTO> response = new ServiceResponse<GetUserDTO>();
             try
             {
-                ApplicationUser user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+                AppUser user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
                 response.Data = _mapper.Map<GetUserDTO>(user);
             }
             catch(Exception ex)
@@ -56,7 +56,7 @@ namespace RecipeeAPI.Services.UserService
             ServiceResponse<GetUserDTO> response = new ServiceResponse<GetUserDTO>();
             try
             {
-                ApplicationUser user = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId());
+                AppUser user = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId());
                 user.FirstName = updatedDetails.FirstName;
                 user.LastName = updatedDetails.LastName;
                 user.Email = updatedDetails.Email;

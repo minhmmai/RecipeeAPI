@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using RecipeeAPI.Services.AuthService;
 using AutoMapper;
 using RecipeeAPI.Services.RecipeService;
-using Microsoft.AspNetCore.Http;
 using RecipeeAPI.Services.UserService;
 using RecipeeAPI.Models;
 using Microsoft.AspNetCore.Identity;
@@ -18,7 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Reflection;
 using System.IO;
-using System.Security.Claims;
+using RecipeeAPI.Services.FbAuthService;
 
 namespace RecipeeAPI
 {
@@ -37,8 +36,10 @@ namespace RecipeeAPI
             services.AddDbContext<RecipeeContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("RecipeeContext")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<RecipeeContext>();
+
+            services.AddHttpClient();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -60,14 +61,16 @@ namespace RecipeeAPI
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 options.User.RequireUniqueEmail = false;
             });
-            services.AddControllers().AddNewtonsoftJson(
-                options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            //services.AddControllers().AddNewtonsoftJson(
+            //    options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddControllers();
 
             services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddHttpClient<IFbAuthService, FbAuthService>();
 
             // Adding Authentication  
             services.AddAuthentication(options =>
@@ -86,17 +89,12 @@ namespace RecipeeAPI
 
                         ValidAudience = Configuration["AuthSettings:ValidAudience"],
                         ValidIssuer = Configuration["AuthSettings:ValidIssuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AuthSettings:SecretKey"])),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AuthSettings:IssuerSecret"])),
 
                         RequireExpirationTime = false,
                         ValidateLifetime = true
                     };
                 });
-
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("RegisteredUser", policy => policy.RequireClaim(ClaimTypes.Role, "member", "moderator", "admin"));
-            });
 
             services.AddSwaggerGen(options =>
             {

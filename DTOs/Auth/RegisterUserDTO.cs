@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RecipeeAPI.DTOs.User
+namespace RecipeeAPI.DTOs.Auth
 {
     /// <summary>
     /// Register user DTO

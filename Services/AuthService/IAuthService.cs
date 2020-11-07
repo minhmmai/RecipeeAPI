@@ -1,5 +1,5 @@
 ﻿using Azure.Core;
-using RecipeeAPI.DTOs.User;
+using RecipeeAPI.DTOs.Auth;
 using RecipeeAPI.Models;
 using System;
 using System.Collections.Generic;
