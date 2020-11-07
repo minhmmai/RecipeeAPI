@@ -23,6 +23,6 @@ namespace RecipeeAPI.Models
         public List<Ingredient> Ingredients { get; set; }
         public List<Method> Methods { get; set; }
         public List<Review> Reviews { get; set; }
-        public ApplicationUser User { get; set; }
+        public AppUser User { get; set; }
     }
 }

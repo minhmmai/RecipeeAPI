@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RecipeeAPI.Data;
-using RecipeeAPI.DTOs.User;
+using RecipeeAPI.DTOs.Auth;
 using RecipeeAPI.Models;
 using RecipeeAPI.Services.UserService;
 using SQLitePCL;
@@ -22,11 +22,11 @@ namespace RecipeeAPI.Services.AuthService
     public class AuthService : IAuthService
     {
         private readonly RecipeeContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IUserService _userService;
         private readonly IConfiguration _configuration;
 
-        public AuthService(RecipeeContext context, UserManager<ApplicationUser> userManager, IUserService userService, IConfiguration configuration)
+        public AuthService(RecipeeContext context, UserManager<AppUser> userManager, IUserService userService, IConfiguration configuration)
         {
             _context = context;
             _userManager = userManager;
@@ -40,7 +40,7 @@ namespace RecipeeAPI.Services.AuthService
 
             try
             {
-                ApplicationUser user = await _userManager.FindByNameAsync(loginUserDTO.Email);
+                AppUser user = await _userManager.FindByNameAsync(loginUserDTO.Email);
                 Boolean checkLoginDetails = await _userManager.CheckPasswordAsync(user, loginUserDTO.Password);
 
                 if (user == null || !checkLoginDetails)
@@ -75,7 +75,7 @@ namespace RecipeeAPI.Services.AuthService
                     return response;
                 }
 
-                ApplicationUser newUser = new ApplicationUser
+                AppUser newUser = new AppUser
                 {
                     UserName = registerUserDTO.Email,
                     FirstName = registerUserDTO.FirstName,
@@ -92,7 +92,7 @@ namespace RecipeeAPI.Services.AuthService
                     return response;
                 }
 
-                ApplicationUser createdUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == registerUserDTO.Email);
+                AppUser createdUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == registerUserDTO.Email);
 
                 await _userManager.AddClaimAsync(createdUser, new Claim(ClaimTypes.Role, "member"));
 
@@ -108,7 +108,7 @@ namespace RecipeeAPI.Services.AuthService
             return response;
         }
 
-        public AccessToken CreateToken(ApplicationUser user)
+        public AccessToken CreateToken(AppUser user)
         {
             var userRoles = _userManager.GetClaimsAsync(user).Result.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
 

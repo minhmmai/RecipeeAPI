@@ -1,4 +1,4 @@
-namespace RecipeeAPI.DTOs.User
+namespace RecipeeAPI.DTOs.Auth
 {
     /// <summary>
     /// DTO for logging in a user

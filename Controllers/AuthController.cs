@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Azure.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RecipeeAPI.DTOs.User;
+using Microsoft.Extensions.Configuration;
+using RecipeeAPI.DTOs.Auth;
+using RecipeeAPI.DTOs.FbAuth;
 using RecipeeAPI.Models;
 using RecipeeAPI.Services;
 using RecipeeAPI.Services.AuthService;
+using RecipeeAPI.Services.FbAuthService;
 
 namespace RecipeeAPI.Controllers
 {
@@ -16,17 +20,20 @@ namespace RecipeeAPI.Controllers
     /// Controller for all methods associated with authentication.
     /// </summary>
     [ApiController]
+    [Route("api/")]
     public class AuthController : ControllerBase
     {
-        private IAuthService _auth;
+        private readonly IAuthService _auth;
+        private readonly IFbAuthService _fbAuth;
 
         /// <summary>
         /// Constructor that initializes the authentication controller.
         /// </summary>
         /// <param name="auth">The services available to authentication.</param>
-        public AuthController(IAuthService auth)
+        public AuthController(IAuthService auth, IFbAuthService fbAuth)
         {
             _auth = auth;
+            _fbAuth = fbAuth;
         }
 
         /// <summary>
@@ -57,6 +64,24 @@ namespace RecipeeAPI.Controllers
         {
             ServiceResponse<AccessToken> response = await _auth.Login(request);
             if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        ///     Login a user through Facebook
+        /// </summary>
+        /// <param name="request">User's access token retrieved from Facebook</param>
+        /// <returns></returns>
+        [HttpPost("login/fb")]
+        public async Task<IActionResult> LoginFb(UserTokenDTO request)
+        {
+            var response = await _fbAuth.GetFbUserAsync(request);
+
+            if (response == null)
             {
                 return BadRequest(response);
             }
