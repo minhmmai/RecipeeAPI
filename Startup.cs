@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RecipeeAPI.Data;
 using Microsoft.EntityFrameworkCore;
-using RecipeeAPI.Services.AuthService;
 using AutoMapper;
 using RecipeeAPI.Services.RecipeService;
 using RecipeeAPI.Services.UserService;
@@ -17,7 +16,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Reflection;
 using System.IO;
-using RecipeeAPI.Services.FbAuthService;
 
 namespace RecipeeAPI
 {
@@ -67,10 +65,8 @@ namespace RecipeeAPI
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddHttpClient<IFbAuthService, FbAuthService>();
 
             // Adding Authentication  
             services.AddAuthentication(options =>

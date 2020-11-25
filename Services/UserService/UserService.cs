@@ -34,7 +34,7 @@ namespace RecipeeAPI.Services.UserService
             return response;
         }
 
-        public async Task<ServiceResponse<GetUserDTO>> GetUserById(string id)
+        public async Task<ServiceResponse<GetUserDTO>> GetUserById(int id)
         {
             ServiceResponse<GetUserDTO> response = new ServiceResponse<GetUserDTO>();
             try
@@ -71,14 +71,14 @@ namespace RecipeeAPI.Services.UserService
             return response;
         }
 
-        public string GetUserId()
+        public int GetUserId()
         {
-            return _httpContextAccessor.HttpContext.User.FindFirstValue("user_id");
+            return Int32.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue("user_id"));
         }
 
-        public async Task<bool> UserExist(string username)
+        public async Task<bool> UserExist(string email)
         {
-            return await _context.Users.AnyAsync(u => u.UserName.ToLower() == username.ToLower());
+            return await _context.Users.AnyAsync(u => u.Email.ToLower() == email.ToLower());
         }
     }
 }

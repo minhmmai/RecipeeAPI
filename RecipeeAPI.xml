@@ -14,38 +14,6 @@
             AutoMapper profile
             </summary>
         </member>
-        <member name="T:RecipeeAPI.Controllers.AuthController">
-            <summary>
-            Controller for all methods associated with authentication.
-            </summary>
-        </member>
-        <member name="M:RecipeeAPI.Controllers.AuthController.#ctor(RecipeeAPI.Services.AuthService.IAuthService,RecipeeAPI.Services.FbAuthService.IFbAuthService)">
-            <summary>
-            Constructor that initializes the authentication controller.
-            </summary>
-            <param name="auth">The services available to authentication.</param>
-        </member>
-        <member name="M:RecipeeAPI.Controllers.AuthController.Register(RecipeeAPI.DTOs.Auth.RegisterUserDTO)">
-            <summary>
-            Register a new user account.
-            </summary>
-            <param name="request">The DTO for registering a user account.</param>
-            <returns></returns>
-        </member>
-        <member name="M:RecipeeAPI.Controllers.AuthController.Login(RecipeeAPI.DTOs.Auth.LoginUserDTO)">
-            <summary>
-                Login a user
-            </summary>
-            <param name="request">The DTO for logging in a user.</param>
-            <returns></returns>
-        </member>
-        <member name="M:RecipeeAPI.Controllers.AuthController.LoginFb(RecipeeAPI.DTOs.FbAuth.UserTokenDTO)">
-            <summary>
-                Login a user through Facebook
-            </summary>
-            <param name="request">User's access token retrieved from Facebook</param>
-            <returns></returns>
-        </member>
         <member name="T:RecipeeAPI.Controllers.RecipesController">
             <summary>
             Controller for all methods associated with a recipe.
@@ -94,7 +62,7 @@
             <param name="context">The Recipee database context.</param>
             <param name="userService">The services available to a user account.</param>
         </member>
-        <member name="M:RecipeeAPI.Controllers.UsersController.GetUserById(System.String)">
+        <member name="M:RecipeeAPI.Controllers.UsersController.GetUserById(System.Int32)">
             <summary>
             Get a user account information using its Id.
             </summary>
@@ -125,6 +93,11 @@
             </summary>
             <param name="options"></param>
         </member>
+        <member name="P:RecipeeAPI.Data.RecipeeContext.Users">
+            <summary>
+            The users context.
+            </summary>
+        </member>
         <member name="P:RecipeeAPI.Data.RecipeeContext.Recipes">
             <summary>
             The recipes context.
@@ -143,46 +116,6 @@
         <member name="P:RecipeeAPI.Data.RecipeeContext.Reviews">
             <summary>
             The recipe's reviews context.
-            </summary>
-        </member>
-        <member name="T:RecipeeAPI.DTOs.Auth.LoginUserDTO">
-            <summary>
-            DTO for logging in a user
-            </summary>
-        </member>
-        <member name="P:RecipeeAPI.DTOs.Auth.LoginUserDTO.Email">
-            <summary>
-            User's email address
-            </summary>
-        </member>
-        <member name="P:RecipeeAPI.DTOs.Auth.LoginUserDTO.Password">
-            <summary>
-            User account password
-            </summary>
-        </member>
-        <member name="T:RecipeeAPI.DTOs.Auth.RegisterUserDTO">
-            <summary>
-            Register user DTO
-            </summary>
-        </member>
-        <member name="P:RecipeeAPI.DTOs.Auth.RegisterUserDTO.FirstName">
-            <summary>
-            User's first name
-            </summary>
-        </member>
-        <member name="P:RecipeeAPI.DTOs.Auth.RegisterUserDTO.LastName">
-            <summary>
-            User's last name
-            </summary>
-        </member>
-        <member name="P:RecipeeAPI.DTOs.Auth.RegisterUserDTO.Email">
-            <summary>
-            User's email address
-            </summary>
-        </member>
-        <member name="P:RecipeeAPI.DTOs.Auth.RegisterUserDTO.Password">
-            <summary>
-            User's password
             </summary>
         </member>
         <member name="T:RecipeeAPI.DTOs.User.GetUserDTO">

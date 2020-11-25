@@ -22,6 +22,11 @@ namespace RecipeeAPI.Data
         }
 
         /// <summary>
+        /// The users context.
+        /// </summary>
+        public DbSet<AppUser> Users { get; set; }
+
+        /// <summary>
         /// The recipes context.
         /// </summary>
         public DbSet<Recipe> Recipes { get; set; }

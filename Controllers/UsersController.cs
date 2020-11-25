@@ -41,7 +41,7 @@ namespace RecipeeAPI.Controllers
         /// <returns>The information related to the user account.</returns>
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById(string id)
+        public async Task<IActionResult> GetUserById(int id)
         {
             if (await _context.Users.AnyAsync(u => u.Id == id))
             {

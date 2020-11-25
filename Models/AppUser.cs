@@ -24,6 +24,9 @@ namespace RecipeeAPI.Models
                 return FirstName + " " + LastName;
             }
         }
+        [StringLength(255)]
+        [Required]
+        public string Email { get; set; }
         public string PictureUrl { get; set; }
         public List<Recipe> Recipes { get; set; }
         public List<Review> Reviews { get; set; }
