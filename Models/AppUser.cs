@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace RecipeeAPI.Models
 {
     [Table("User")]
-    public class AppUser : IdentityUser
+    public class AppUser : BaseEntity
     {
         [StringLength(50)]
         [Required]
@@ -26,5 +26,6 @@ namespace RecipeeAPI.Models
         }
         public string PictureUrl { get; set; }
         public List<Recipe> Recipes { get; set; }
+        public List<Review> Reviews { get; set; }
     }
 }

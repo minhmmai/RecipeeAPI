@@ -13,9 +13,10 @@ namespace RecipeeAPI.Models
     {
         [Range(1,5)]
         public byte Rating { get; set; }
-        [StringLength(500)]
+        [StringLength(1000)]
         public string Feedback { get; set; }
         public int RecipeId { get; set; }
         public Recipe Recipe { get; set; }
+        public AppUser User { get; set; }
     }
 }

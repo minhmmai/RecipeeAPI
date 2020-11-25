@@ -11,7 +11,7 @@ namespace RecipeeAPI.Data
     /// <summary>
     /// The Recipee API database context.
     /// </summary>
-    public class RecipeeContext : IdentityDbContext<AppUser>
+    public class RecipeeContext : DbContext
     {
         /// <summary>
         /// Contructor to initialze the context.
