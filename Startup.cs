@@ -8,14 +8,14 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using RecipeeAPI.Services.RecipeService;
 using RecipeeAPI.Services.UserService;
-using RecipeeAPI.Models;
-using Microsoft.AspNetCore.Identity;
 using System;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Reflection;
 using System.IO;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Identity.Web;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 
 namespace RecipeeAPI
 {
@@ -34,63 +34,31 @@ namespace RecipeeAPI
             services.AddDbContext<RecipeeContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("RecipeeContext")));
 
-            services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<RecipeeContext>();
-
             services.AddHttpClient();
 
-            services.Configure<IdentityOptions>(options =>
-            {
-                // Password settings.
-                options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = true;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = true;
-                options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 0;
-
-                // Lockout settings.
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-                options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.AllowedForNewUsers = true;
-
-                // User settings.
-                options.User.AllowedUserNameCharacters =
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-                options.User.RequireUniqueEmail = false;
-            });
             //services.AddControllers().AddNewtonsoftJson(
             //    options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddMicrosoftIdentityWebApi(options =>
+                    {
+                        Configuration.Bind("AzureAdB2C", options);
+                        options.TokenValidationParameters =
+                        new TokenValidationParameters
+                        {
+                            ValidIssuer = $"https://sts.windows.net/{Configuration["AzureAd:TenantId"]}/",
+                        };
+                    },
+            options => { Configuration.Bind("AzureAdB2C", options); });
+
             services.AddControllers();
+
+            services.AddHttpContextAccessor();
 
             services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<IUserService, UserService>();
-
-            // Adding Authentication  
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-                {
-                    options.SaveToken = true;
-                    options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateIssuerSigningKey = true,
-
-                        ValidAudience = Configuration["AuthSettings:ValidAudience"],
-                        ValidIssuer = Configuration["AuthSettings:ValidIssuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AuthSettings:IssuerSecret"])),
-
-                        RequireExpirationTime = false,
-                        ValidateLifetime = true
-                    };
-                });
 
             services.AddSwaggerGen(options =>
             {
@@ -117,7 +85,7 @@ namespace RecipeeAPI
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/RecipeeAPI/swagger.json", "Recipee Api");
+                options.SwaggerEndpoint("/swagger/RecipeeAPI/swagger.json", "Recipee API");
                 options.RoutePrefix = "";
             });
             app.UseRouting();

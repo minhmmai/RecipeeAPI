@@ -15,6 +15,7 @@ namespace RecipeeAPI.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class RecipesController : ControllerBase
     {
         private readonly IRecipeService _recipeService;
@@ -31,7 +32,6 @@ namespace RecipeeAPI.Controllers
         /// Get all recipes created by the logged in user
         /// </summary>
         [HttpGet()]
-        [Authorize(Policy = "RegisteredUser")]
         public async Task<IActionResult> GetAllRecipes()
         {
             ServiceResponse<List<GetRecipeDTO>> response = await _recipeService.GetAllRecipes();
@@ -69,7 +69,6 @@ namespace RecipeeAPI.Controllers
         /// <param name="request">DTO for adding a recipe</param>
         /// <returns>Added recipe (GetRecipeDTO)</returns>
         [HttpPost]
-        [Authorize(Policy = "RegisteredUser")]
         public async Task<IActionResult> AddRecipe([FromBody] AddRecipeDTO request)
         {
             ServiceResponse<GetRecipeDTO> response = await _recipeService.AddRecipe(request);
@@ -88,7 +87,6 @@ namespace RecipeeAPI.Controllers
         /// <param name="recipeId">Id of the recipe to be updated</param>
         /// <param name="request">DTO for updating a recipe</param>
         [HttpPut("{recipeId}")]
-        [Authorize(Policy = "RegisteredUser")]
         public async Task<IActionResult> UpdateRecipe(int recipeId, UpdateRecipeDTO request)
         {
             ServiceResponse<GetRecipeDTO> response = await _recipeService.UpdateRecipe(recipeId, request);
@@ -100,5 +98,13 @@ namespace RecipeeAPI.Controllers
 
             return Ok(response);
         }
+
+        //[AllowAnonymous]
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            return Ok("success");
+        }
+
     }
 }
