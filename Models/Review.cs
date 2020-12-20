@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace RecipeeAPI.Models
 {
-    [Table("Review")]
     public class Review : BaseEntity
     {
         [Range(1,5)]

@@ -43,11 +43,8 @@ namespace RecipeeAPI
                     .AddMicrosoftIdentityWebApi(options =>
                     {
                         Configuration.Bind("AzureAdB2C", options);
-                        options.TokenValidationParameters =
-                        new TokenValidationParameters
-                        {
-                            ValidIssuer = $"https://sts.windows.net/{Configuration["AzureAd:TenantId"]}/",
-                        };
+
+                        options.TokenValidationParameters.NameClaimType = "name";
                     },
             options => { Configuration.Bind("AzureAdB2C", options); });
 

@@ -98,13 +98,5 @@ namespace RecipeeAPI.Controllers
 
             return Ok(response);
         }
-
-        //[AllowAnonymous]
-        [HttpGet("test")]
-        public IActionResult Test()
-        {
-            return Ok("success");
-        }
-
     }
 }

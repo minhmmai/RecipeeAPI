@@ -7,7 +7,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RecipeeAPI.Models
 {
-    [Table("User")]
     public class AppUser : BaseEntity
     {
         [StringLength(50)]

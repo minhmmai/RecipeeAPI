@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace RecipeeAPI.Models
 {
-    [Table("Ingredient")]
     public class Ingredient : BaseEntity
     {
         [Column(TypeName = ("decimal(5,2)"))]
