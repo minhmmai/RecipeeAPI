@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace RecipeeAPI.Models
 {
+    [Table("Method")]
     public class Method : BaseEntity
     {
         [Required]

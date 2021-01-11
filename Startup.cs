@@ -14,8 +14,6 @@ using System.Reflection;
 using System.IO;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
 
 namespace RecipeeAPI
 {

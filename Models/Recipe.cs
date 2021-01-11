@@ -9,6 +9,7 @@ using System.ComponentModel;
 
 namespace RecipeeAPI.Models
 {
+    [Table("Recipe")]
     public class Recipe : BaseEntity
     {
         [MaxLength(100)]
